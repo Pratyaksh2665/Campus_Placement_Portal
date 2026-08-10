@@ -34,7 +34,7 @@ app.use(cookieParser());
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/profile", profileRoutes);
-app.use("/api/job", jobRoutes);
+app.use("/api/jobs", jobRoutes);
 app.use("/api/company", companyRoutes);
 app.use("/api/search", searchJobsRoutes);
 app.use("/api/notifications", notificationRoutes);
