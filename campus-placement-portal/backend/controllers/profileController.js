@@ -83,7 +83,7 @@ const uploadResume = async (req, res) => {
     }
 
     const result = await cloudinary.uploader.upload(file.path, {
-      resource_type: "raw",
+      resource_type: "image",
       folder: "resumes",
     });
 
