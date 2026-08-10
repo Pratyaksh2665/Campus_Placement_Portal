@@ -62,23 +62,25 @@ const StudentProfile = () => {
   };
 
   const uploadResume = async () => {
-    if (!resume) return;
+    if (!resume) {
+      toast.error("Please select a resume");
+      return;
+    }
 
     const formData = new FormData();
+
     formData.append("resume", resume);
 
     try {
-      await api.post("/profile/upload-resume", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      await api.post("/profile/upload-resume", formData);
 
       toast.success("Resume Uploaded");
 
       fetchProfile();
     } catch (error) {
       console.error(error);
+
+      toast.error(error.response?.data?.message || "Resume upload failed");
     }
   };
 
@@ -163,7 +165,7 @@ const StudentProfile = () => {
 
         <input
           type="file"
-          accept=".pdf,.doc,.docx"
+          accept=".pdf"
           onChange={(e) => setResume(e.target.files[0])}
         />
 
