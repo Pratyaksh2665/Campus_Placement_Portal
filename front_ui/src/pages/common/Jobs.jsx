@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+
 import api from "../../api/axios";
 import JobCard from "../../components/home/job/JobCard";
 import Loader from "./Loader";
@@ -9,26 +11,34 @@ const Jobs = () => {
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
 
+  const [searchParams] = useSearchParams();
+
   const fetchJobs = async (keyword = "") => {
     try {
       setLoading(true);
 
-      const response = await api.get(`/jobs?keyword=${keyword}`);
+      const response = await api.get(
+        `/job?keyword=${encodeURIComponent(keyword)}`,
+      );
 
-      setJobs(response.data.jobs);
+      setJobs(response.data.jobs || []);
     } catch (error) {
-      console.error(error);
+      console.error("Failed to fetch jobs:", error);
+      setJobs([]);
     } finally {
       setLoading(false);
     }
   };
 
-  // Initial Load
+  // Read keyword from URL when page opens
   useEffect(() => {
-    fetchJobs();
+    const keywordFromUrl = searchParams.get("keyword") || "";
+
+    setSearch(keywordFromUrl);
+    fetchJobs(keywordFromUrl);
   }, []);
 
-  // Auto Search after 500ms
+  // Search when user types
   useEffect(() => {
     const timer = setTimeout(() => {
       fetchJobs(search);
@@ -42,8 +52,8 @@ const Jobs = () => {
   }
 
   return (
-    <div className="max-w-7xl mx-auto py-10 px-6">
-      <h1 className="text-4xl font-bold mb-10">All Jobs</h1>
+    <div className="mx-auto max-w-7xl px-6 py-10">
+      <h1 className="mb-8 text-4xl font-bold">All Jobs</h1>
 
       {/* Search */}
       <div className="mb-10">
@@ -52,7 +62,7 @@ const Jobs = () => {
           placeholder="Search jobs..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
 
@@ -63,7 +73,7 @@ const Jobs = () => {
           subtitle="Try changing your search or check back later."
         />
       ) : (
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
           {jobs.map((job) => (
             <JobCard key={job._id} job={job} />
           ))}

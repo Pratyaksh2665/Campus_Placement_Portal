@@ -1,29 +1,56 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 const Hero = () => {
+  const [search, setSearch] = useState("");
+  const navigate = useNavigate();
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+
+    const value = search.trim();
+
+    if (!value) {
+      return;
+    }
+
+    navigate(`/jobs?keyword=${encodeURIComponent(value)}`);
+  };
+
+  const handlePopularSearch = (company) => {
+    navigate(`/jobs?keyword=${encodeURIComponent(company)}`);
+  };
+
   return (
-    <section className="min-h-[85vh] flex items-center justify-center bg-gray-50">
-      <div className="max-w-4xl mx-auto px-6 text-center">
+    <section className="bg-gray-50">
+      <div className="mx-auto max-w-7xl px-6 py-32 text-center">
         {/* Heading */}
-        <h1 className="text-5xl font-bold text-gray-900 leading-tight">
+        <h1 className="text-5xl font-bold text-gray-900">
           Find Your <span className="text-blue-600">Dream Job</span>
         </h1>
 
         {/* Description */}
-        <p className="mt-6 text-lg text-gray-600 max-w-2xl mx-auto">
+        <p className="mx-auto mt-6 max-w-2xl text-lg text-gray-600">
           Connect with top companies, explore thousands of opportunities, and
           take the next step in your career.
         </p>
 
         {/* Search Form */}
-        <form className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
+        <form
+          onSubmit={handleSearch}
+          className="mt-10 flex flex-col justify-center gap-4 sm:flex-row"
+        >
           <input
             type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
             placeholder="Search jobs by title, company, or skill..."
-            className="w-full sm:w-[450px] px-5 py-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full rounded-lg border border-gray-300 px-5 py-3 outline-none focus:ring-2 focus:ring-blue-500 sm:w-[450px]"
           />
 
           <button
             type="submit"
-            className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition"
+            className="rounded-lg bg-blue-600 px-6 py-3 text-white transition hover:bg-blue-700"
           >
             Search
           </button>
@@ -31,25 +58,45 @@ const Hero = () => {
 
         {/* Popular Searches */}
         <div className="mt-8 flex flex-wrap justify-center gap-3">
-          <span className="px-4 py-2 bg-white rounded-full shadow text-sm">
+          <button
+            type="button"
+            onClick={() => handlePopularSearch("Google")}
+            className="rounded-full bg-white px-4 py-2 text-sm shadow hover:bg-gray-100"
+          >
             Google
-          </span>
+          </button>
 
-          <span className="px-4 py-2 bg-white rounded-full shadow text-sm">
+          <button
+            type="button"
+            onClick={() => handlePopularSearch("Microsoft")}
+            className="rounded-full bg-white px-4 py-2 text-sm shadow hover:bg-gray-100"
+          >
             Microsoft
-          </span>
+          </button>
 
-          <span className="px-4 py-2 bg-white rounded-full shadow text-sm">
+          <button
+            type="button"
+            onClick={() => handlePopularSearch("Amazon")}
+            className="rounded-full bg-white px-4 py-2 text-sm shadow hover:bg-gray-100"
+          >
             Amazon
-          </span>
+          </button>
 
-          <span className="px-4 py-2 bg-white rounded-full shadow text-sm">
+          <button
+            type="button"
+            onClick={() => handlePopularSearch("Adobe")}
+            className="rounded-full bg-white px-4 py-2 text-sm shadow hover:bg-gray-100"
+          >
             Adobe
-          </span>
+          </button>
 
-          <span className="px-4 py-2 bg-white rounded-full shadow text-sm">
+          <button
+            type="button"
+            onClick={() => handlePopularSearch("Flipkart")}
+            className="rounded-full bg-white px-4 py-2 text-sm shadow hover:bg-gray-100"
+          >
             Flipkart
-          </span>
+          </button>
         </div>
       </div>
     </section>
