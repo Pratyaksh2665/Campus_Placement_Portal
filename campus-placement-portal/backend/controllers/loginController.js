@@ -52,7 +52,7 @@ const loginUser = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error(error);
+    console.error("LOGIN ERROR:", error);
 
     return res.status(500).json({
       success: false,
