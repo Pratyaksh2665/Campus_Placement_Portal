@@ -14,15 +14,19 @@ const Navbar = () => {
 
       setUser(null);
 
-      navigate("/login");
+      navigate("/login", { replace: true });
     } catch (error) {
-      console.error(error);
+      console.error("Logout failed:", error);
+
+      setUser(null);
+
+      navigate("/login", { replace: true });
     }
   };
 
   return (
-    <nav className="shadow-md bg-white">
-      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+    <nav className="bg-white shadow">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
         {/* Logo */}
         <Link to="/" className="text-3xl font-bold text-blue-600">
           JobPortal
@@ -30,12 +34,14 @@ const Navbar = () => {
 
         {/* Navigation */}
         <ul className="flex items-center gap-8">
+          {/* Home */}
           <li>
             <Link to="/" className="font-medium hover:text-blue-600">
               Home
             </Link>
           </li>
 
+          {/* Jobs */}
           <li>
             <Link to="/jobs" className="font-medium hover:text-blue-600">
               Jobs
@@ -118,22 +124,30 @@ const Navbar = () => {
 
         {/* Right Side */}
         <div className="flex items-center gap-4">
+          {/* Not logged in */}
           {!user ? (
             <>
               <Link to="/login">
-                <button className="cursor-pointer rounded-lg border border-blue-600 px-5 py-2 text-blue-600 hover:bg-blue-50">
+                <button
+                  type="button"
+                  className="cursor-pointer rounded-lg border border-blue-600 px-5 py-2 text-blue-600 hover:bg-blue-50"
+                >
                   Login
                 </button>
               </Link>
 
               <Link to="/register">
-                <button className="cursor-pointer rounded-lg bg-blue-600 px-5 py-2 text-white hover:bg-blue-700">
+                <button
+                  type="button"
+                  className="cursor-pointer rounded-lg bg-blue-600 px-5 py-2 text-white hover:bg-blue-700"
+                >
                   Register
                 </button>
               </Link>
             </>
           ) : (
             <>
+              {/* User profile */}
               <Link
                 to={
                   user.role === "student"
@@ -145,7 +159,9 @@ const Navbar = () => {
                 {user.name}
               </Link>
 
+              {/* Logout */}
               <button
+                type="button"
                 onClick={handleLogout}
                 className="cursor-pointer rounded-lg bg-red-500 px-5 py-2 text-white hover:bg-red-600"
               >
