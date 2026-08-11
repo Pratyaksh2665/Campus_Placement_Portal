@@ -31,26 +31,33 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+// Disable API caching while testing
+app.use((req, res, next) => {
+  res.set("Cache-Control", "no-store");
+  next();
+});
+
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/profile", profileRoutes);
 app.use("/api/jobs", jobRoutes);
-app.use("/api/company", companyRoutes);
+app.use("/api/companies", companyRoutes);
 app.use("/api/search", searchJobsRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/saved-jobs", savedJobRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/applications", applicationRoutes);
 
+// Health check
 app.get("/", (req, res) => {
   res.status(200).json({
     success: true,
-    message: "Campus Placement Portal API Running ",
+    message: "Campus Placement Portal API Running",
   });
 });
 
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-  console.log(` Server running on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });

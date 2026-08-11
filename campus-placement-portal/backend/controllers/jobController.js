@@ -80,23 +80,47 @@ const getAllJobs = async (req, res) => {
   try {
     const { keyword = "", location, jobType } = req.query;
 
-    let query = {
-      $or: [
+    let query = {};
+
+    // Search by title, description, requirements OR company name
+    if (keyword.trim()) {
+      const companies = await Company.find({
+        name: {
+          $regex: keyword.trim(),
+          $options: "i",
+        },
+      }).select("_id");
+
+      const companyIds = companies.map((company) => company._id);
+
+      query.$or = [
         {
           title: {
-            $regex: keyword,
+            $regex: keyword.trim(),
             $options: "i",
           },
         },
         {
           description: {
-            $regex: keyword,
+            $regex: keyword.trim(),
             $options: "i",
           },
         },
-      ],
-    };
+        {
+          requirements: {
+            $regex: keyword.trim(),
+            $options: "i",
+          },
+        },
+        {
+          company: {
+            $in: companyIds,
+          },
+        },
+      ];
+    }
 
+    // Location filter
     if (location) {
       query.location = {
         $regex: location,
@@ -104,6 +128,7 @@ const getAllJobs = async (req, res) => {
       };
     }
 
+    // Job type filter
     if (jobType) {
       query.jobType = jobType;
     }
@@ -118,7 +143,7 @@ const getAllJobs = async (req, res) => {
       jobs,
     });
   } catch (error) {
-    console.error(error);
+    console.error("Get All Jobs Error:", error);
 
     return res.status(500).json({
       success: false,
