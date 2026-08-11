@@ -18,7 +18,7 @@ const Jobs = () => {
       setLoading(true);
 
       const response = await api.get(
-        `/job?keyword=${encodeURIComponent(keyword)}`,
+        `/jobs?keyword=${encodeURIComponent(keyword)}`,
       );
 
       setJobs(response.data.jobs || []);
@@ -30,7 +30,7 @@ const Jobs = () => {
     }
   };
 
-  // Read keyword from URL when page opens
+  // Load jobs using keyword from URL
   useEffect(() => {
     const keywordFromUrl = searchParams.get("keyword") || "";
 
@@ -55,7 +55,6 @@ const Jobs = () => {
     <div className="mx-auto max-w-7xl px-6 py-10">
       <h1 className="mb-8 text-4xl font-bold">All Jobs</h1>
 
-      {/* Search */}
       <div className="mb-10">
         <input
           type="text"
@@ -66,7 +65,6 @@ const Jobs = () => {
         />
       </div>
 
-      {/* Jobs */}
       {jobs.length === 0 ? (
         <EmptyState
           title="No Jobs Found"
