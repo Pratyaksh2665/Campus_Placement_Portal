@@ -36,21 +36,21 @@ const Navbar = () => {
             </Link>
           </li>
 
-          {/* Everyone can browse jobs */}
+          {/* Public Jobs */}
           <li>
             <Link to="/jobs" className="font-medium hover:text-blue-600">
               Jobs
             </Link>
           </li>
 
-          {/* Everyone can browse companies */}
+          {/* Public Companies */}
           <li>
             <Link to="/companies" className="font-medium hover:text-blue-600">
               Companies
             </Link>
           </li>
 
-          {/* Student */}
+          {/* ================= STUDENT ================= */}
           {user?.role === "student" && (
             <>
               <li>
@@ -82,7 +82,7 @@ const Navbar = () => {
             </>
           )}
 
-          {/* Recruiter */}
+          {/* ================= RECRUITER ================= */}
           {user?.role === "recruiter" && (
             <>
               <li>
@@ -115,8 +115,9 @@ const Navbar = () => {
           )}
         </ul>
 
-        {/* Right side */}
+        {/* Right Side */}
         <div className="flex items-center gap-4">
+          {/* Not Logged In */}
           {!user ? (
             <>
               <Link to="/login">
@@ -139,6 +140,7 @@ const Navbar = () => {
             </>
           ) : (
             <>
+              {/* Profile */}
               <Link
                 to={
                   user.role === "student"
@@ -150,6 +152,7 @@ const Navbar = () => {
                 {user.name}
               </Link>
 
+              {/* Logout */}
               <button
                 type="button"
                 onClick={handleLogout}
