@@ -11,15 +11,10 @@ const Navbar = () => {
   const handleLogout = async () => {
     try {
       await api.post("/auth/logout");
-
-      setUser(null);
-
-      navigate("/login", { replace: true });
     } catch (error) {
       console.error("Logout failed:", error);
-
+    } finally {
       setUser(null);
-
       navigate("/login", { replace: true });
     }
   };
@@ -41,21 +36,19 @@ const Navbar = () => {
             </Link>
           </li>
 
-          {/* Jobs */}
+          {/* Everyone can browse jobs */}
           <li>
             <Link to="/jobs" className="font-medium hover:text-blue-600">
               Jobs
             </Link>
           </li>
 
-          {/* Guest */}
-          {!user && (
-            <li>
-              <Link to="/companies" className="font-medium hover:text-blue-600">
-                Companies
-              </Link>
-            </li>
-          )}
+          {/* Everyone can browse companies */}
+          <li>
+            <Link to="/companies" className="font-medium hover:text-blue-600">
+              Companies
+            </Link>
+          </li>
 
           {/* Student */}
           {user?.role === "student" && (
@@ -97,7 +90,7 @@ const Navbar = () => {
                   to="/recruiter/companies"
                   className="font-medium hover:text-blue-600"
                 >
-                  Companies
+                  My Companies
                 </Link>
               </li>
 
@@ -106,7 +99,7 @@ const Navbar = () => {
                   to="/recruiter/jobs"
                   className="font-medium hover:text-blue-600"
                 >
-                  Jobs
+                  My Jobs
                 </Link>
               </li>
 
@@ -122,9 +115,8 @@ const Navbar = () => {
           )}
         </ul>
 
-        {/* Right Side */}
+        {/* Right side */}
         <div className="flex items-center gap-4">
-          {/* Not logged in */}
           {!user ? (
             <>
               <Link to="/login">
@@ -147,19 +139,17 @@ const Navbar = () => {
             </>
           ) : (
             <>
-              {/* User profile */}
               <Link
                 to={
                   user.role === "student"
                     ? "/student/profile"
-                    : "/recruiter/profile"
+                    : "/recruiter/dashboard"
                 }
                 className="font-semibold text-gray-700 hover:text-blue-600"
               >
                 {user.name}
               </Link>
 
-              {/* Logout */}
               <button
                 type="button"
                 onClick={handleLogout}

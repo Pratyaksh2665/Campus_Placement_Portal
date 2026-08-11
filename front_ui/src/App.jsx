@@ -8,6 +8,8 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Home from "./pages/common/Home";
 import Jobs from "./pages/common/Jobs";
 import JobDetails from "./pages/common/JobDetails";
+import Companies from "./pages/common/Companies";
+import CompanyDetails from "./pages/common/CompanyDetails";
 import NotFound from "./pages/common/NotFound";
 
 // Auth Pages
@@ -22,7 +24,7 @@ import StudentProfile from "./pages/student/StudentProfile";
 
 // Recruiter Pages
 import RecruiterDashboard from "./pages/recruiter/RecruiterDashboard";
-import Companies from "./pages/recruiter/Companies";
+import RecruiterCompanies from "./pages/recruiter/Companies";
 import CreateCompany from "./pages/recruiter/CreateCompany";
 import EditCompany from "./pages/recruiter/EditCompany";
 import RecruiterJobs from "./pages/recruiter/Jobs";
@@ -34,14 +36,19 @@ function App() {
   return (
     <>
       <Routes>
-        {/* Pages with Navbar + Footer */}
         <Route element={<MainLayout />}>
-          {/* Common */}
           <Route path="/" element={<Home />} />
+
           <Route path="/jobs" element={<Jobs />} />
+
           <Route path="/jobs/:id" element={<JobDetails />} />
 
-          {/* Student */}
+          {/* Public Companies */}
+          <Route path="/companies" element={<Companies />} />
+
+          {/* Public Company Details */}
+          <Route path="/companies/:id" element={<CompanyDetails />} />
+
           <Route
             path="/student/dashboard"
             element={
@@ -78,7 +85,8 @@ function App() {
             }
           />
 
-          {/* Recruiter */}
+          {/* ================= RECRUITER ================= */}
+
           <Route
             path="/recruiter/dashboard"
             element={
@@ -88,11 +96,12 @@ function App() {
             }
           />
 
+          {/* Recruiter's Companies */}
           <Route
             path="/recruiter/companies"
             element={
               <ProtectedRoute role="recruiter">
-                <Companies />
+                <RecruiterCompanies />
               </ProtectedRoute>
             }
           />
@@ -115,6 +124,7 @@ function App() {
             }
           />
 
+          {/* Recruiter's Jobs */}
           <Route
             path="/recruiter/jobs"
             element={
@@ -152,15 +162,13 @@ function App() {
           />
         </Route>
 
-        {/* Auth */}
         <Route path="/login" element={<Login />} />
+
         <Route path="/register" element={<Register />} />
 
-        {/* 404 */}
         <Route path="*" element={<NotFound />} />
       </Routes>
 
-      {/* Toast Notifications */}
       <Toaster position="top-right" reverseOrder={false} />
     </>
   );
