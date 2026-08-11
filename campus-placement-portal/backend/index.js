@@ -15,6 +15,7 @@ const notificationRoutes = require("./routes/notificationRoutes");
 const savedJobRoutes = require("./routes/savedJobRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
 const applicationRoutes = require("./routes/applicationRoutes");
+const publicCompanyRoutes = require("./routes/publicCompanyRoutes");
 
 const app = express();
 
@@ -41,7 +42,8 @@ app.use((req, res, next) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/profile", profileRoutes);
 app.use("/api/jobs", jobRoutes);
-app.use("/api/companies", companyRoutes);
+app.use("/api/company", companyRoutes);
+app.use("/api/companies", publicCompanyRoutes);
 app.use("/api/search", searchJobsRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/saved-jobs", savedJobRoutes);
