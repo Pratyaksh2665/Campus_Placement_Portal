@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
 import api from "../../api/axios";
-import Loader from "../../components/common/Loader";
+import Loader from "./Loader";
 
 const CompanyDetails = () => {
   const { id } = useParams();

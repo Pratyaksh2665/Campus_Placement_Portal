@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../../api/axios";
-import Loader from "../../components/common/Loader";
-import EmptyState from "../../components/common/EmptyState";
+import Loader from "./Loader";
+import EmptyState from "./EmptyState";
 
 const Companies = () => {
   const [companies, setCompanies] = useState([]);
