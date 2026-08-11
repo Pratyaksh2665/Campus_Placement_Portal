@@ -11,25 +11,22 @@ const Hero = () => {
     const value = search.trim();
 
     if (!value) {
+      navigate("/jobs");
       return;
     }
 
     navigate(`/jobs?keyword=${encodeURIComponent(value)}`);
   };
 
-  const handlePopularSearch = (company) => {
+  const searchCompany = (company) => {
     navigate(`/jobs?keyword=${encodeURIComponent(company)}`);
   };
 
   return (
-    <section className="bg-gray-50">
-      <div className="mx-auto max-w-7xl px-6 py-32 text-center">
-        {/* Heading */}
-        <h1 className="text-5xl font-bold text-gray-900">
-          Find Your <span className="text-blue-600">Dream Job</span>
-        </h1>
+    <section className="bg-gray-50 py-20">
+      <div className="mx-auto max-w-7xl px-6 text-center">
+        <h1 className="text-5xl font-bold">Find Your Dream Job</h1>
 
-        {/* Description */}
         <p className="mx-auto mt-6 max-w-2xl text-lg text-gray-600">
           Connect with top companies, explore thousands of opportunities, and
           take the next step in your career.
@@ -60,7 +57,7 @@ const Hero = () => {
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <button
             type="button"
-            onClick={() => handlePopularSearch("Google")}
+            onClick={() => searchCompany("Google")}
             className="rounded-full bg-white px-4 py-2 text-sm shadow hover:bg-gray-100"
           >
             Google
@@ -68,7 +65,7 @@ const Hero = () => {
 
           <button
             type="button"
-            onClick={() => handlePopularSearch("Microsoft")}
+            onClick={() => searchCompany("Microsoft")}
             className="rounded-full bg-white px-4 py-2 text-sm shadow hover:bg-gray-100"
           >
             Microsoft
@@ -76,7 +73,7 @@ const Hero = () => {
 
           <button
             type="button"
-            onClick={() => handlePopularSearch("Amazon")}
+            onClick={() => searchCompany("Amazon")}
             className="rounded-full bg-white px-4 py-2 text-sm shadow hover:bg-gray-100"
           >
             Amazon
@@ -84,7 +81,7 @@ const Hero = () => {
 
           <button
             type="button"
-            onClick={() => handlePopularSearch("Adobe")}
+            onClick={() => searchCompany("Adobe")}
             className="rounded-full bg-white px-4 py-2 text-sm shadow hover:bg-gray-100"
           >
             Adobe
@@ -92,7 +89,7 @@ const Hero = () => {
 
           <button
             type="button"
-            onClick={() => handlePopularSearch("Flipkart")}
+            onClick={() => searchCompany("Flipkart")}
             className="rounded-full bg-white px-4 py-2 text-sm shadow hover:bg-gray-100"
           >
             Flipkart

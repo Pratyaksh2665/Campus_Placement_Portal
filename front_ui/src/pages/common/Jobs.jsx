@@ -7,19 +7,24 @@ import Loader from "./Loader";
 import EmptyState from "./EmptyState";
 
 const Jobs = () => {
-  const [jobs, setJobs] = useState([]);
-  const [search, setSearch] = useState("");
-  const [loading, setLoading] = useState(true);
-
   const [searchParams] = useSearchParams();
 
-  const fetchJobs = async (keyword = "") => {
+  const [search, setSearch] = useState(() => {
+    return searchParams.get("keyword") || "";
+  });
+
+  const [jobs, setJobs] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchJobs = async (keyword) => {
     try {
       setLoading(true);
 
-      const response = await api.get(
-        `/jobs?keyword=${encodeURIComponent(keyword)}`,
-      );
+      const response = await api.get("/jobs", {
+        params: {
+          keyword: keyword.trim(),
+        },
+      });
 
       setJobs(response.data.jobs || []);
     } catch (error) {
@@ -30,15 +35,6 @@ const Jobs = () => {
     }
   };
 
-  // Load jobs using keyword from URL
-  useEffect(() => {
-    const keywordFromUrl = searchParams.get("keyword") || "";
-
-    setSearch(keywordFromUrl);
-    fetchJobs(keywordFromUrl);
-  }, []);
-
-  // Search when user types
   useEffect(() => {
     const timer = setTimeout(() => {
       fetchJobs(search);
@@ -55,6 +51,7 @@ const Jobs = () => {
     <div className="mx-auto max-w-7xl px-6 py-10">
       <h1 className="mb-8 text-4xl font-bold">All Jobs</h1>
 
+      {/* Search */}
       <div className="mb-10">
         <input
           type="text"
@@ -65,6 +62,7 @@ const Jobs = () => {
         />
       </div>
 
+      {/* Jobs */}
       {jobs.length === 0 ? (
         <EmptyState
           title="No Jobs Found"
