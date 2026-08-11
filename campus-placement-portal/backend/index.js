@@ -41,9 +41,15 @@ app.use((req, res, next) => {
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/profile", profileRoutes);
+
 app.use("/api/jobs", jobRoutes);
+
+// Recruiter company APIs
 app.use("/api/company", companyRoutes);
+
+// Public company APIs
 app.use("/api/companies", publicCompanyRoutes);
+
 app.use("/api/search", searchJobsRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/saved-jobs", savedJobRoutes);
