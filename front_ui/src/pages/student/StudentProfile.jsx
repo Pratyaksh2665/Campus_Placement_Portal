@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../../api/axios";
 import Loader from "../common/Loader";
-import EmptyState from "../common/EmptyState";
 import toast from "react-hot-toast";
 
 const StudentProfile = () => {
@@ -50,14 +49,26 @@ const StudentProfile = () => {
     e.preventDefault();
 
     try {
-      await api.put("/profile", {
+      const response = await api.put("/profile", {
         ...profile,
-        skills: profile.skills.split(",").map((skill) => skill.trim()),
+        year: profile.year ? Number(profile.year) : undefined,
+        cgpa: profile.cgpa ? Number(profile.cgpa) : undefined,
+        skills: profile.skills
+          .split(",")
+          .map((skill) => skill.trim())
+          .filter(Boolean),
       });
 
-      alert("Profile Updated");
+      setProfile({
+        ...response.data.user,
+        skills: response.data.user.skills?.join(", ") || "",
+      });
+
+      toast.success("Profile updated successfully");
     } catch (error) {
-      console.error(error);
+      console.error("Profile update error:", error);
+
+      toast.error(error.response?.data?.message || "Failed to update profile");
     }
   };
 
@@ -129,10 +140,13 @@ const StudentProfile = () => {
         />
 
         <input
+          type="number"
           name="year"
           value={profile.year || ""}
           onChange={handleChange}
           placeholder="Year"
+          min="1"
+          max="5"
           className="w-full border p-3 rounded-lg"
         />
 
