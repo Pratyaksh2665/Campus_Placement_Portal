@@ -14,6 +14,10 @@ const JobDetails = () => {
   const [applying, setApplying] = useState(false);
   const [saving, setSaving] = useState(false);
 
+  // AI states
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiResult, setAiResult] = useState(null);
+
   useEffect(() => {
     const fetchJob = async () => {
       try {
@@ -65,6 +69,27 @@ const JobDetails = () => {
     }
   };
 
+  // AI Job Match
+  const handleAIJobMatch = async () => {
+    try {
+      setAiLoading(true);
+      setAiResult(null);
+
+      const response = await api.post(`/ai/job-match/${job._id}`);
+
+      setAiResult(response.data.analysis);
+    } catch (error) {
+      console.error("AI Job Match Error:", error);
+
+      alert(
+        error.response?.data?.message ||
+          "Failed to generate AI job match. Please try again.",
+      );
+    } finally {
+      setAiLoading(false);
+    }
+  };
+
   if (loading) {
     return <Loader />;
   }
@@ -108,7 +133,11 @@ const JobDetails = () => {
 
         <h2 className="text-2xl font-semibold mt-8 mb-3">Requirements</h2>
 
-        <p className="text-gray-700">{job.requirements}</p>
+        <p className="text-gray-700">
+          {Array.isArray(job.requirements)
+            ? job.requirements.join(", ")
+            : job.requirements}
+        </p>
 
         <div className="grid md:grid-cols-2 gap-6 mt-8">
           <div>
@@ -122,6 +151,156 @@ const JobDetails = () => {
           </div>
         </div>
 
+        {/* AI Job Match */}
+        {user?.role === "student" && (
+          <div className="mt-10 border-t pt-8">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div>
+                <h2 className="text-2xl font-semibold"> AI Job Match</h2>
+
+                <p className="text-gray-600 mt-2">
+                  See how well your profile matches this job.
+                </p>
+              </div>
+
+              <button
+                onClick={handleAIJobMatch}
+                disabled={aiLoading}
+                className="bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 disabled:bg-gray-400"
+              >
+                {aiLoading ? "Analyzing..." : "Check AI Match"}
+              </button>
+            </div>
+
+            {/* AI Result */}
+            {aiResult && (
+              <div className="mt-8 bg-gray-50 rounded-xl p-6 border">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                  <h3 className="text-2xl font-bold">AI Match Result</h3>
+
+                  <div className="text-3xl font-bold text-purple-600">
+                    {aiResult.matchScore}%
+                  </div>
+                </div>
+
+                {/* Matched Skills */}
+                {aiResult.matchedSkills?.length > 0 && (
+                  <div className="mt-6">
+                    <h4 className="font-semibold text-lg">Matched Skills</h4>
+
+                    <div className="flex flex-wrap gap-2 mt-3">
+                      {aiResult.matchedSkills.map((skill, index) => (
+                        <span
+                          key={index}
+                          className="bg-green-100 text-green-700 px-3 py-1 rounded-full"
+                        >
+                          ✓ {skill}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Missing Skills */}
+                {aiResult.missingSkills?.length > 0 && (
+                  <div className="mt-6">
+                    <h4 className="font-semibold text-lg">
+                      Skills You May Need
+                    </h4>
+
+                    <div className="flex flex-wrap gap-2 mt-3">
+                      {aiResult.missingSkills.map((skill, index) => (
+                        <span
+                          key={index}
+                          className="bg-red-100 text-red-700 px-3 py-1 rounded-full"
+                        >
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Experience & Education */}
+                <div className="grid md:grid-cols-2 gap-4 mt-6">
+                  <div className="bg-white rounded-lg p-4">
+                    <p className="font-semibold">Experience Match</p>
+
+                    <p
+                      className={
+                        aiResult.experienceMatch
+                          ? "text-green-600 mt-1"
+                          : "text-red-600 mt-1"
+                      }
+                    >
+                      {aiResult.experienceMatch ? "✓ Yes" : "✗ No"}
+                    </p>
+                  </div>
+
+                  <div className="bg-white rounded-lg p-4">
+                    <p className="font-semibold">Education Match</p>
+
+                    <p
+                      className={
+                        aiResult.educationMatch
+                          ? "text-green-600 mt-1"
+                          : "text-red-600 mt-1"
+                      }
+                    >
+                      {aiResult.educationMatch ? "✓ Yes" : "✗ No"}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Strengths */}
+                {aiResult.strengths?.length > 0 && (
+                  <div className="mt-6">
+                    <h4 className="font-semibold text-lg">Strengths</h4>
+
+                    <ul className="list-disc ml-6 mt-2 text-gray-700">
+                      {aiResult.strengths.map((strength, index) => (
+                        <li key={index}>{strength}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {/* Improvements */}
+                {aiResult.improvements?.length > 0 && (
+                  <div className="mt-6">
+                    <h4 className="font-semibold text-lg">
+                      Suggested Improvements
+                    </h4>
+
+                    <ul className="list-disc ml-6 mt-2 text-gray-700">
+                      {aiResult.improvements.map((improvement, index) => (
+                        <li key={index}>{improvement}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {/* Recommendation */}
+                {aiResult.recommendation && (
+                  <div className="mt-6 bg-purple-50 rounded-lg p-4">
+                    <p className="font-semibold">Recommendation</p>
+
+                    <p className="text-gray-700 mt-1">
+                      {aiResult.recommendation}
+                    </p>
+                  </div>
+                )}
+
+                <p className="text-xs text-gray-500 mt-6">
+                  AI analysis is an informational aid and should not be treated
+                  as a hiring decision.
+                </p>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Existing Apply + Save */}
         {user?.role === "student" && (
           <div className="flex gap-4 mt-10">
             <button

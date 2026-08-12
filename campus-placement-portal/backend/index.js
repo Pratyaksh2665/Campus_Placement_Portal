@@ -16,6 +16,7 @@ const savedJobRoutes = require("./routes/savedJobRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
 const applicationRoutes = require("./routes/applicationRoutes");
 const publicCompanyRoutes = require("./routes/publicCompanyRoutes");
+const aiRoutes = require("./routes/aiRoutes");
 
 const app = express();
 
@@ -43,6 +44,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/profile", profileRoutes);
 
 app.use("/api/jobs", jobRoutes);
+app.use("/api/ai", aiRoutes);
 
 // Recruiter company APIs
 app.use("/api/company", companyRoutes);
