@@ -61,7 +61,6 @@ const getJobMatch = async (req, res) => {
   }
 };
 
-// ==========================================
 const getApplicantJobMatch = async (req, res) => {
   try {
     const { jobId, studentId } = req.params;
@@ -93,7 +92,7 @@ const getApplicantJobMatch = async (req, res) => {
 
     // Get applicant
     const student = await User.findById(studentId).select(
-      "name email college branch year cgpa skills resume profilePhoto bio github linkedin portfolio experience role",
+      "name email phone college branch year cgpa skills resume profilePhoto bio github linkedin portfolio experience role",
     );
 
     if (!student) {
@@ -109,6 +108,17 @@ const getApplicantJobMatch = async (req, res) => {
         message: "Selected user is not a student",
       });
     }
+
+    console.log("AI Applicant Data:", {
+      name: student.name,
+      college: student.college,
+      branch: student.branch,
+      year: student.year,
+      cgpa: student.cgpa,
+      skills: student.skills,
+      experience: student.experience,
+      resume: student.resume,
+    });
 
     // Compare applicant with the recruiter's job
     const analysis = await getJobMatchAnalysis(student, job);
